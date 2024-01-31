@@ -1,0 +1,117 @@
+//all schemas we need
+
+
+DRIVER
+
+BUS
+
+CUSTOMER
+
+PAYMENTS
+
+RESERVATION
+
+TRANSACTION REPORT
+
+1.DRIVER and itsattributes.
+
+_id:string
+
+DRIVER_NAME : string
+
+BUS_ID : objId, ref: BUS
+
+2.BUS and its attributes.
+
+_id:string
+
+BUS_NO :string
+
+BUS_TYPE : string
+
+BUS_SEATS : number
+
+DRIVER_ID : objId, ref - DRIVER
+
+3.PASSENGER and its attributes.
+
+_id:string
+
+FNAME : string
+
+LNAME : string
+
+GENDER : string
+
+AGE : number
+
+CONTACT_NO : number
+
+4.PAYMENTS and its attributes.
+
+_id:string
+
+PASSENGER_ID :objId, ref: passenger
+
+RESERVATION_ID :objId , ref :RESERVATION
+
+PAYMENT_DATE : DateNow;
+
+5.RESERVATION and its attributes.
+
+_id:string
+
+PASSENGER_ID : objId, ref: passenger
+
+BUS_ID INT :objId, ref: BUS
+
+    DEPARTURE_TIME : time
+
+    DESTINATION : string
+
+RESERVATION_DATE :date
+
+
+
+/////// logic of create seates  ///////
+// Online Javascript Editor for free
+// Write, Edit and Run your Javascript code using JS Online Compiler
+
+function printModifiedSquare(rows, columns) {
+    if (columns > 6 || columns < 4) return console.log(`please enter matching width of the bus`)
+    for (let i = 1; i <= rows; i++) {
+        let line = "";
+        for (let j = 1; j <= columns; j++) {
+            // Every first and second element in each row is "#"
+            if(columns === 5){
+                if (j === 1 || j === 2) {
+                line += " 1 ";
+            } else {
+                line += " 2 ";
+            }
+            }else if(columns === 6){
+                if (j === 1 || j === 2 || j===3) {
+                line += "1 ";
+            } else {
+                line += "2 ";
+            }
+            }else{
+                if (j === 1 || j === 2) {
+                line += " 1 ";
+            } else {
+                line += " 2 ";
+            }
+            }
+        }
+        console.log(line);
+    }
+    
+}
+
+// Pattern size variables
+let patternRows = 10;
+let patternColumns = 6;
+
+// Calling function for pattern printing
+printModifiedSquare(patternRows, patternColumns);
+//////////////////////////////===================///////////////////////////
