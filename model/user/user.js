@@ -7,7 +7,15 @@ const userSchema = new mongoose.Schema({
     phone: { type: String, unique: true, min: 10 },
     email: { type: String, unique: true },
     password:String,
-    busBookings:[{}]
+    busBookings:[{
+        busTicket:{
+            type:mongoose.Types.ObjectId,
+            ref:'Bus'
+        },
+        seatNumber:Number,
+        date:String,
+        status:Boolean,
+    }]
 });
 
 const user = mongoose.model("User", userSchema);

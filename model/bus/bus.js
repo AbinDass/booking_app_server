@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const busSchema = new mongoose.Schema({
     busNumber: String,
     busType: String,
-    busTotalSeats: String,
+    busTotalSeats: Number,
     driver: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Driver",
@@ -18,20 +18,22 @@ const busSchema = new mongoose.Schema({
     destination: String,
     seat_number: [
         {
-           type:Number,
-            seatNumber:Number,
-            min: 1,
-            max: 54,
-            required: true,
+            seatNumber: {
+                type: Number,
+                required: true,
+                min: 1,
+                max: 54,
+            },
             is_booked: {
                 type: Boolean,
                 default: false,
             },
+            bookedDate:Date
         },
-    ],
+    ]
 },{
     timestamps:true
 });
 
-const busticket = mongoose.model("Ticket", busSchema);
+const busticket = mongoose.model("Bus", busSchema);
 export default busticket;
