@@ -71,68 +71,76 @@ export const signIn = async (req, res) => {
 };
 
 export const forgotPassword = async (req, res, next) => {
+    const { email } = req.body;
+    let token;
     try {
-        const { email } = req.body;
-        let token;
         const user = await userDb.findOne({ email: email });
+        
+        let expiresTime = 300
         if (!user) {
             res.status(200).json({ success: false, message: `this user is not exist` });
-        } else {
+        }else{
             const payload = {
                 email: user.email,
             };
-            const expiresTime = 300;
-
-            token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: expiresTime });
-            const newToken = await new tokenDb({ userId: user._id, token });
-
-            //creating mailtransporter
-
-            const mailtransporter = nodemailer.createTransport({
-                email: "gmail",
-                auth: {
-                    user: "abindas350@gmail.com",
-                    pass: "", //password means login to myaccount.google and goto app password use the key pass here
-                },
-            });
-
-            let mailDetails = {
-                from : "abindas350@gmail.com",
-                to:email,
-                subject:`reset password`,
-                html:`
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>reset password</title>
-                </head>
-                <body>
-                    <h1>password reset request</h1> 
-                    
-                    <p>dear ${user.name} ,</p>
-                    <a href="${process.env.LIVE_URL}/reset/${token}"><button>reset password</button></a>
-                    <p>please note this link is only valid for 5 minute</p>
-                    <p>thank you</p>
-                    <p>from abindas</p>
-                </body>
-                </html>
-                `
-            }
-            
-            mailtransporter.sendMail(mailDetails, async (err, data)=>{
-                if(err){
-                    console.log(err)
-                    return res.status(200).json({message:`something went wrong`})
-                }
-            })
-
-            // let verify = jwt.verify(token, process.env.JWT_SECRET_KEY);
-            // if (verify) {
-            //     return res.status(200).json({ token: token, message: "verified" });
-            // }
+             token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: expiresTime });
         }
+
+
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: process.env.EMAIL,
+              pass: process.env.APP_PASSWORD
+            }
+          });
+          
+          var mailOptions = {
+            from: 'abindas350@gmail.com',
+            to: email,
+            subject: 'reset your password',
+            html:`
+                 <html lang="en">
+                 <head>
+                     <meta charset="UTF-8">
+                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                     <title>reset password</title>
+                 </head>
+                 <body>
+                     <h1>password reset request</h1> 
+                    
+                     <p>dear ${user.name} ,</p>
+                     <a  href="${process.env.LIVE_URL}/resetpassword/${user._id}/${token}"><button style="background-color: blue; padding: 5px; border-radius: 3px; text-decoration: none; color: white;">reset password</button></a>
+                     <p>please note this link is only valid for 5 minute</p>
+                     <p>thank you</p>
+                     <p>from abindas</p>
+                 </body>
+                 </html>`
+          };
+          
+          transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+              console.log(error,12)
+            } else {
+              console.log('Email sent: ' + info.response);
+            }
+          });
+
+
     } catch (error) {
         res.status(200).json({ success: false, message: error.message });
     }
 };
+
+export const resetPassword = async (req,res) =>{
+    const userId = req.param.id;
+    const token = req.param.token;
+    const {password} = req.body;
+    try {
+        const isUser = await userDb.findOne({_id:userId})
+        
+    } catch (error) {
+        console.log(error)
+        res.status(200).json({message:error.message})
+    }
+}

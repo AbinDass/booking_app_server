@@ -16,7 +16,7 @@ bookingDB.then(()=>{
 
 app.use('/auth', authRoutes)
 app.use('/user', userRoutes)
-app.use('/admin', adminRoutes)
+app.use('/admin', adminRoutes)  
 app.listen(process.env.PORT, () => {
     console.log(`booking server is running on ${process.env.PORT}`) 
 })
